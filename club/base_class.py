@@ -10,4 +10,4 @@ class Club(ABC):
         self.member_count = member_count
         self.description = description
         self.created_at = created_at
-        
+ 
