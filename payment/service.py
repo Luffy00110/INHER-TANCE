@@ -1,5 +1,3 @@
-# service.py
-
 class PaymentService:
     def list_menu(self):
         pass
