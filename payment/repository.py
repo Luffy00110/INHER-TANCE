@@ -1,5 +1,3 @@
-# repository.py
-
 class PaymentMethodRepository:
     pass
 
