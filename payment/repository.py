@@ -9,26 +9,40 @@ class PaymentMethodRepository:
     def listele(self):
         return self.payment_methods
 
-    def kullanici_secimi(self, owner):       #Kullanıcıya ait ödeme yöntemlerini bulmak için
-        result = []
+    def kullanici_secimi(self, owner):     #Kullanıcıya ait ödeme yöntemlerini bulmak için
+        sonuc = []
         for method in self.payment_methods:
             if method.owner == owner:
-                result.append(method)
-        return result
+                sonuc.append(method)
+        return sonuc
 
-    def kart_tercihi(self, kart_turu):       #Kart Tipi seçimi için
-        result = []
+    def kart_tercihi(self, kart_turu):     #Kart tipi seçimi için
+        sonuc = []
+
         for method in self.payment_methods:
-            if hasattr(method, "kart_turu") and method.kart_turu == kart_turu:
-                result.append(method)
-        return result
+            sinif_adi = method.__class__.__name__
+
+            if sinif_adi == "VisaCardPayment":
+                if kart_turu == "VISA":
+                    sonuc.append(method)
+
+            elif sinif_adi == "MasterCardPayment":
+                if kart_turu == "MASTERCARD":
+                    sonuc.append(method)
+
+            elif sinif_adi == "TroyCardPayment":
+                if kart_turu == "TROY":
+                    sonuc.append(method)
+
+        return sonuc
 
     def payment_method_sil(self, method):
         if method in self.payment_methods:
             self.payment_methods.remove(method)
             return True
         return False
-    
+
+
 class TransactionRepository:
     def __init__(self):
         self.transactions = []
@@ -52,4 +66,10 @@ class TransactionRepository:
         for islem in self.transactions:
             toplam += islem.amount
         return toplam
+    
+    def id_ile_getir(self, id):
+        for islem in self.transactions:
+          if islem.id == id:
+            return islem
+        return None
 
