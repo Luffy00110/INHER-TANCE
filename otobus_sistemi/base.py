@@ -201,3 +201,4 @@ class Tramvay(TransportVehicle):
     def km_basina_maaliyet(self):
         return 9.35
 
+
