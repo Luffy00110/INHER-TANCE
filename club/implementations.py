@@ -1,4 +1,4 @@
-from app.modules.club.base import Club
+from base import Club
 from datetime import datetime, timedelta
 import random
 # Etkinlik verileri:
@@ -112,3 +112,4 @@ class ClubService:
             print(f"[ÜYELİK] {member_name} -> {kulup.name} üyesi oldu.")
         else:
             print(f"[HATA] '{club_name}' isimli kulüp bulunamadı.")
+            
