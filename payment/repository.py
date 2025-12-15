@@ -72,4 +72,10 @@ class TransactionRepository:
           if islem.id == id:
             return islem
         return None
-
+    
+    def tarih_araligi_getir(self, baslangic, bitis):
+     sonuc = []
+     for islem in self.transactions:
+        if baslangic <= islem.tarih <= bitis:
+            sonuc.append(islem)
+     return sonuc

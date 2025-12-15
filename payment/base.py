@@ -1,9 +1,10 @@
 from abc import ABC, abstractmethod
 
 class PaymentMethod(ABC):
-    def __init__(self, owner, currency):
+    def __init__(self, owner, currency,limit=0):
         self.owner = owner
         self.currency = currency
+        self.limit = limit
 
     @abstractmethod
     def kontrol(self, amount):
@@ -13,34 +14,36 @@ class PaymentMethod(ABC):
     def odeme(self, amount):
         pass
 
-    def aciklama_bilgisi(self):
+    @abstractmethod
+    def para_birimi_bilgisi(self):
         pass
 
-    @staticmethod
-    def para_birimi_bilgisi(currency):
+    def aciklama_bilgisi(self):
         pass
 
 
 class CreditCardPayment(PaymentMethod):
 
-    def __init__(self, owner, currency, kart_numarasi, cvv, son_kullanma_tarihi):
-        super().__init__(owner, currency)
+    def __init__(self, owner, currency, kart_numarasi, cvv, son_kullanma_tarihi, limit):
+        super().__init__(owner, currency,limit)
         self.kart_numarasi = kart_numarasi
         self.cvv = cvv
         self.son_kullanma_tarihi = son_kullanma_tarihi
 
     def kontrol(self, amount):
-        return True
+        return self.limit >= amount
 
     def odeme(self, amount):
-        return True
+        if self.kontrol(amount):
+            self.limit -= amount
+            return True
+        return False
+    
+    def para_birimi_bilgisi(self):
+        return f"Kredi kartlarında kullanılan para birimi: {self.currency}"
 
     def aciklama_bilgisi(self):
-        return (
-            f"CreditCard(owner={self.owner}, CardNumber={self.kart_numarasi}, "
-            f"CVV={self.cvv}, expiration_date = {self.son_kullanma_tarihi} "
-            f"currency={self.currency})"
-        )
+        return f"Wallet(owner={self.owner}, bakiye={self.limit} {self.currency})"
 
 
 class CashPayment(PaymentMethod):
@@ -57,6 +60,9 @@ class CashPayment(PaymentMethod):
             self.odeme_amount -= amount
             return True
         return False
+    
+    def para_birimi_bilgisi(self):
+        return f"Nakit ödemelerde kullanılan para birimi: {self.currency}"
 
     def aciklama_bilgisi(self):
         return f"Cash(owner={self.owner}, cash={self.odeme_amount} {self.currency})"
@@ -77,6 +83,9 @@ class OnlineWalletPayment(PaymentMethod):
             self.bakiye -= amount
             return True
         return False
+    
+    def para_birimi_bilgisi(self):
+        return f"Online cüzdanlarda kullanılan para birimi: {self.currency}"
 
     def aciklama_bilgisi(self):
         return f"Wallet(owner={self.owner}, bakiye={self.bakiye} {self.currency})"
@@ -122,27 +131,28 @@ class YemekCardPayment(PaymentMethod):
             self.bakiye -= amount
             self.secilen_yemekler = []
             return True
-
         return False
+    
+    def para_birimi_bilgisi(self):
+        return f"Yemekhane kartlarında kullanılan para birimi: {self.currency}"
 
     def aciklama_bilgisi(self):
         return f"YemekCard(owner={self.owner}, bakiye={self.bakiye} {self.currency})"
     
 # KART TÜRÜNE GÖRE KREDİ KARTLARI
 class VisaCardPayment(CreditCardPayment):
-    def __init__(self, owner, currency, kart_numarasi, cvv, son_kullanma_tarihi):
-        super().__init__(owner, currency, kart_numarasi, cvv, son_kullanma_tarihi)
+    def __init__(self, owner, currency, kart_numarasi, cvv, son_kullanma_tarihi, limit):
+        super().__init__(owner, currency, kart_numarasi, cvv, son_kullanma_tarihi, limit)
         self.kart_turu = "VISA"
 
-
 class MasterCardPayment(CreditCardPayment):
-    def __init__(self, owner, currency, kart_numarasi, cvv, son_kullanma_tarihi):
-        super().__init__(owner, currency, kart_numarasi, cvv, son_kullanma_tarihi)
+    def __init__(self, owner, currency, kart_numarasi, cvv, son_kullanma_tarihi, limit):
+        super().__init__(owner, currency, kart_numarasi, cvv, son_kullanma_tarihi, limit)
         self.kart_turu = "MASTERCARD"
 
 class TroyCardPayment(CreditCardPayment):
-    def __init__(self, owner, currency, kart_numarasi, cvv, son_kullanma_tarihi):
-        super().__init__(owner, currency, kart_numarasi, cvv, son_kullanma_tarihi)
+    def __init__(self, owner, currency, kart_numarasi, cvv, son_kullanma_tarihi, limit):
+        super().__init__(owner, currency, kart_numarasi, cvv, son_kullanma_tarihi, limit)
         self.kart_turu = "TROY"
 
  # KAMPÜS KARTLARI (Ulaşım İçin)      

@@ -118,4 +118,26 @@ class PaymentService:
                     siparis.append(urun)
 
         return siparis
+    
+    #Toplam tutarı hesaplama
+    def toplam_tutar_hesapla(self, siparis):
+        toplam = 0
+        for urun in siparis:
+            toplam += urun["fiyat"]
+        return toplam
 
+    #Kullanıcının uygun ödeme yöntemlerini seçme
+    def kullanici_odeme_yontemleri(self, owner):
+        return self.payment_repo.kullanici_secimi(owner)
+
+    #Ödeme gerçekleştirme
+    def odeme_yap(self, owner, payment_method, siparis):
+        toplam_tutar = self.toplam_tutar_hesapla(siparis)
+        if payment_method.odeme(toplam_tutar):
+            self.transaction_repo.ekle(Transaction(owner, toplam_tutar, type(payment_method).__name__))
+            return True
+        return False
+
+    #İşlem geçmişini listeleme
+    def islem_gecmisi(self, owner=None):
+        return self.transaction_repo.listele(owner)   
