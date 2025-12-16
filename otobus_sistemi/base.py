@@ -19,6 +19,12 @@ class TransportVehicle(ABC):
     @abstractmethod
     def km_basina_maaliyet(self):
         pass
+    def bilgi_ver(self):
+        print(f"Araç ID: {self.id}")
+        print(f"Durum: {self.durum}")
+        print(f"Konum: {self.mevcut_lokasyon}")
+        print(f"Kapasite: {self.kapasite}")
+        
 #Shuttle Sınıfı
 class Shuttle(TransportVehicle):
     def __init__(self, id, kapasite, durum, batarya_yuzdesi):
