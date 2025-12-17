@@ -19,7 +19,7 @@ class PaymentMethod(ABC):
         pass
 
     def aciklama_bilgisi(self):
-        pass
+        return f"{self.owner} - {self.currency}"
 
 
 class CreditCardPayment(PaymentMethod):
@@ -155,7 +155,7 @@ class TroyCardPayment(CreditCardPayment):
         super().__init__(owner, currency, kart_numarasi, cvv, son_kullanma_tarihi, limit)
         self.kart_turu = "TROY"
 
- # KAMPÜS KARTLARI (Ulaşım İçin)      
+# KAMPÜS KARTLARI (Ulaşım İçin)      
 class CampusCardPayment(PaymentMethod):
 
     def __init__(self, owner, currency, bakiye=0):
@@ -179,6 +179,9 @@ class CampusCardPayment(PaymentMethod):
 
     def aciklama_bilgisi(self):
         return f"CampusCard(owner={self.owner}, bakiye={self.bakiye} {self.currency})"
+    
+    def para_birimi_bilgisi(self):
+        return f"Kampüs kartı para birimi: {self.currency}"
 
 class OtobusCardPayment(CampusCardPayment):
     def __init__(self, owner, currency, bakiye=0):
