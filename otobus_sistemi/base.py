@@ -94,15 +94,31 @@ class Bicyle(TransportVehicle): #Bisiklet ksımı şimdilik sadece ücret eklenm
     def __init__(self, id,durum, mevcut_lokasyon="Ana Kampüs"):
         super().__init__(id, durum, mevcut_lokasyon)
 
-    def sistemi_calistir(self):
-        print("Bisiklet ulaşım sitemini çalıştırdınız.")
+    # şiimdilk iptal def sistemi_calistir(self):
+        #print("Bisiklet ulaşım sitemini çalıştırdınız.")
     
-    def sistemi_durdur(self):
-        print("Bisiklet ulaşım sistemini sonlandırdınız.")
+    # şiimdilk iptal  def sistemi_durdur(self):
+        #print("Bisiklet ulaşım sistemini sonlandırdınız.")
+    
+    # şiimdilk iptal def km_basina_maaliyet(self):
+        #return 0.15
     
     def km_basina_maaliyet(self):
-        return 0.15
 
+        return 0.15 
+
+    def motoru_calistir(self):
+
+        print(f"Bisiklet {self.id} sürüşe hazır.")
+
+    def motoru_kapat(self):
+
+        print(f"Bisiklet {self.id} kilitlendi.")    
+
+    def bilgi_ver(self):
+
+        super().bilgi_ver()
+        
 class Metro(TransportVehicle):
     def __init__(self, id, kapasite, durum, mevcut_lokasyon="Ana Kampüs",hat_ismi="M1"):
         super().__init__(id, kapasite, durum, mevcut_lokasyon)
