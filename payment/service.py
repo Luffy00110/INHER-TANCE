@@ -1,5 +1,8 @@
 from datetime import date
 
+class AuthorizationError(Exception):
+    pass
+
 class Transaction:
     def __init__(self, owner, amount, payment_type, id=None, tarih=None):
         self.owner = owner
@@ -42,11 +45,11 @@ class PaymentService:
             ],
             "garnitur": [
                 {"ad": "Çoban Salata", "fiyat": 30},
-                {"ad": "Rus Salata", "fiyat": 30},
+                {"ad": "Rus Salata", "fiyat": 40},
                 {"ad": "Pirinç Pilavı", "fiyat": 30},
                 {"ad": "Bulgur Pilavı", "fiyat": 25},
                 {"ad": "Makarna", "fiyat": 30},
-                {"ad": "Patates Kızartması", "fiyat": 30},
+                {"ad": "Patates Kızartması", "fiyat": 25},
                 {"ad": "Yoğurt", "fiyat": 30}
             ],
 
@@ -125,19 +128,31 @@ class PaymentService:
         for urun in siparis:
             toplam += urun["fiyat"]
         return toplam
-
-    #Kullanıcının uygun ödeme yöntemlerini seçme
-    def kullanici_odeme_yontemleri(self, owner):
-        return self.payment_repo.kullanici_secimi(owner)
+    
+    #Kullanıcının bakiyesine göre otomatik ödeme yöntemi seçilir.
+    def uygun_odeme_yontemi_sec(self, owner, toplam_tutar):
+        for method in self.payment_repo.kullanici_secimi(owner):
+          if method.kontrol(toplam_tutar):
+            return method
+        return None
 
     #Ödeme gerçekleştirme
     def odeme_yap(self, owner, payment_method, siparis):
+        if payment_method is None:
+            raise AuthorizationError("Uygun ödeme yöntemi bulunamadı")
         toplam_tutar = self.toplam_tutar_hesapla(siparis)
+        if not payment_method.kontrol(toplam_tutar):
+           raise AuthorizationError("Yetkilendirme başarısız: Yetersiz bakiye/limit")
         if payment_method.odeme(toplam_tutar):
-            self.transaction_repo.ekle(Transaction(owner, toplam_tutar, type(payment_method).__name__))
+            self.transaction_repo.islem_ekle(Transaction(owner, toplam_tutar, type(payment_method).__name__))
             return True
         return False
 
     #İşlem geçmişini listeleme
     def islem_gecmisi(self, owner=None):
-        return self.transaction_repo.listele(owner)   
+        if owner:
+            return self.transaction_repo.kullanici_secimi(owner)
+        return self.transaction_repo.listele()
+    
+    def tarih_araligi_raporu(self, baslangic, bitis):     
+        return self.transaction_repo.tarih_araligi_getir(baslangic, bitis)
