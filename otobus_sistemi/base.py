@@ -25,6 +25,16 @@ class TransportVehicle(ABC):
         print(f"Konum: {self.mevcut_lokasyon}")
         print(f"Kapasite: {self.kapasite}")
         
+    def ariza_yap(self):
+        self.durum = "Arızalı"
+        print(f"⚠️  ALARM: {self.id} numaralı araç ARIZA YAPTI! Sistem dışı.")
 
+    def tamir_et(self):
+        if self.durum == "Arızalı":
+            print("🛠️  Araç servise alındı, tamir ediliyor...")
+            self.durum = "Müsait" 
+            print(f"✅ {self.id} numaralı araç tamir edildi. Tekrar göreve hazır.")
+        else:
+            print(f"ℹ️  {self.id} numaralı araç zaten sağlam, tamire gerek yok!.")
 
 

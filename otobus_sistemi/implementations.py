@@ -1,4 +1,5 @@
 from base import TransportVehicle
+
 #Shuttle Sınıfı
 class Shuttle(TransportVehicle):
     def __init__(self, id, kapasite, durum, batarya_yuzdesi):
@@ -20,6 +21,7 @@ class Shuttle(TransportVehicle):
     def sarj_et(self):
         self.batarya_yuzdesi = 100
         print(f"Shuttle {self.id} şarj edildi. Batarya ful!")
+
 #Belediye otobüsü
 class Bus(TransportVehicle):
     def __init__(self, id, durum, otobus_tipi="Standart"):
@@ -37,8 +39,12 @@ class Bus(TransportVehicle):
         self.yakit_tuketimi_degeri = yakit_tuketimi
 
     def motoru_calistir(self):
-        return super().motoru_calistir()    
-    
+        if self.durum == "Arızalı":
+             print(f"❌ HATA: Araç ({self.id}) arızalı! Önce tamir etmelisin.")
+             return 
+
+        print(f"✅ Otobüs ({self.otobus_tipi}) motoru çalıştı.")
+       
     def motoru_kapat(self):
         return super().motoru_kapat()
     
@@ -66,7 +72,7 @@ class Scooter(TransportVehicle):
         print("Batarya şarj edildi.")
 class Bicyle(TransportVehicle): #Bisiklet ksımı şimdilik sadece ücret eklenmiştir bunun dışında kart ödeme kısmı vs de eklenecektir.
     def __init__(self, id,durum, mevcut_lokasyon="Ana Kampüs"):
-        super().__init__(id, durum, mevcut_lokasyon)
+        super().__init__(id, 1, durum, mevcut_lokasyon)
 
     # şiimdilk iptal def sistemi_calistir(self):
         #print("Bisiklet ulaşım sitemini çalıştırdınız.")
@@ -82,8 +88,10 @@ class Bicyle(TransportVehicle): #Bisiklet ksımı şimdilik sadece ücret eklenm
         return 0.15 
 
     def motoru_calistir(self):
-
-        print(f"Bisiklet {self.id} sürüşe hazır.")
+        if self.durum == "Arızalı":
+            print(f"❌ HATA: Bisiklet ({self.id}) sistem dışı! Kilit açılamaz.")
+            return       
+        print("✅ Bisiklet kilidi açıldı. Keyifli sürüşler!")
 
     def motoru_kapat(self):
 
@@ -123,10 +131,10 @@ class Metro(TransportVehicle):
             "Atatürk Havalimanı"
     ] #İstanbul M1 metro hattı duraklar ekstra olarak Ana Kampüs Kuzey Kampüs ve Yurtlar eklenmiştir
     def motoru_calistir(self):
-    
-   
-        return super().motoru_calistir()
-    
+        if self.durum == "Arızalı":
+            print(f"❌ KRİTİK HATA: {self.hat_ismi} hattında sinyalizasyon arızası! Metro hareket edemez.")
+            return
+        
     def motoru_kapat(self):
         return super().motoru_kapat()
     
@@ -150,7 +158,9 @@ class Havaray(TransportVehicle):
         ]
     
     def motoru_calistir(self):
-        return super().motoru_calistir()
+        if self.durum == "Arızalı":
+            print(f"❌ TEHLİKE: Havaray ({self.id}) sensör hatası! Güvenlik nedeniyle hareket edemez.")
+            return
     
     def km_basina_maaliyet(self):
         return 15.5 #Henüz fiyatlandırma hakkında karar vermedim deney örneği.
@@ -189,7 +199,10 @@ class Tramvay(TransportVehicle):
             "Erkek Yurdu"
         ]
     def motoru_calistir(self):
-        return super().motoru_calistir()
+        # 1. ARIZA KONTROLÜ
+        if self.durum == "Arızalı":
+            print(f"❌ ELEKTRİK HATASI: Tramvay ({self.id}) katener hattından enerji alamıyor! Pantograf inik.")
+            return
     
     def motoru_kapat(self):
         return super().motoru_kapat()
