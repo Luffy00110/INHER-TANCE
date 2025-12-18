@@ -1,5 +1,4 @@
-from base import Shuttle, Bus, Scooter, Bicyle, Metro, Tramvay, Havaray
-
+from implementations import Shuttle, Bus, Scooter, Bicyle, Metro, Tramvay, Havaray
 print("Main.py dosyasının testi") #Değişme ihtimali mevcut denemek için böyle yaptım.
 
 print("Shuttle")
