@@ -1,10 +1,211 @@
-# app/modules/module_2/implementations.py
-from app.modules.module_2.base import BaseClass2
+from base import TransportVehicle
 
-class Base2SubClass1(BaseClass2):
-    def method2(self):
-        print(f"Sinif Attribute: {self.base2Attribute}")
+#Shuttle Sınıfı
+class Shuttle(TransportVehicle):
+    def __init__(self, id, kapasite, durum, batarya_yuzdesi):
+        super().__init__(id, kapasite, durum)
+        self.batarya_yuzdesi = batarya_yuzdesi  # Shuttle'a özel özellik
 
-class Base2SubClass2(BaseClass2):
-    def method2(self):
-        print(f"Sinif Attribute: {self.base2Attribute}")
+    def motoru_calistir(self):
+        if self.batarya_yuzdesi > 10:
+            print(f"Shuttle {self.id} çalıştırıldı. Batarya: %{self.batarya_yuzdesi}")
+        else:
+            print(f"HATA: Shuttle {self.id} çalıştırılamadı! Batarya çok düşük.")
+
+    def motoru_kapat(self):
+        print(f"Shuttle {self.id} kontak kapattı!")
+    #Türkiye geneline göre elektrikli araçların km başına maaliyetini araştırıp grup üyelerimizle beraber 2.35tlde karar kıldık.
+    def km_basina_maaliyet(self):
+        return 2.35
+    
+    def sarj_et(self):
+        self.batarya_yuzdesi = 100
+        print(f"Shuttle {self.id} şarj edildi. Batarya ful!")
+
+#Belediye otobüsü
+class Bus(TransportVehicle):
+    def __init__(self, id, durum, otobus_tipi="Standart"):
+        # Otobüs tipine göre kapasite ve km başına yaktığı tl cinsinini hesapladık. Yolcu sayısını hesaplarken oturan ve ayakta giden yoluların toplamını aldık.
+        if otobus_tipi == "Koruklu":
+            kapasite = 163
+            yakit_tuketimi = 26.70   
+        else:
+            kapasite = 102
+            yakit_tuketimi = 15.575
+
+        super().__init__(id, kapasite, durum)
+        
+        self.otobus_tipi = otobus_tipi
+        self.yakit_tuketimi_degeri = yakit_tuketimi
+
+    def motoru_calistir(self):
+        if self.durum == "Arızalı":
+             print(f"❌ HATA: Araç ({self.id}) arızalı! Önce tamir etmelisin.")
+             return 
+
+        print(f"✅ Otobüs ({self.otobus_tipi}) motoru çalıştı.")
+       
+    def motoru_kapat(self):
+        return super().motoru_kapat()
+    
+    def km_basina_maaliyet(self):
+        return self.yakit_tuketimi_degeri
+class Scooter(TransportVehicle):
+    def __init__(self, id, durum, batarya_yuzdesi, mevcut_lokasyon="Ana Kampüs",):
+        self.batarya_yuzdesi = batarya_yuzdesi
+        super().__init__(id, durum,batarya_yuzdesi, mevcut_lokasyon)
+
+    def motoru_calistir(self):
+        if self.batarya_yuzdesi <= 10:
+            print("Batarya yüzdesi çok düşük! Scooter çalıştırılamadı!")
+        else:
+            print("Scooter çalıştırıldı! Güvenliğiniz için kaskınızı ve ekipmanlarınızı takmayı unutmayın...")
+    
+    def motoru_kapat(self):
+        return super().motoru_kapat()
+    
+    def km_basina_maaliyet(self):
+        return 0.58
+    
+    def sarj_et(self):
+        self.batarya_yuzdesi = 100
+        print("Batarya şarj edildi.")
+class Bicyle(TransportVehicle): #Bisiklet ksımı şimdilik sadece ücret eklenmiştir bunun dışında kart ödeme kısmı vs de eklenecektir.
+    def __init__(self, id,durum, mevcut_lokasyon="Ana Kampüs"):
+        super().__init__(id, 1, durum, mevcut_lokasyon)
+
+    # şiimdilk iptal def sistemi_calistir(self):
+        #print("Bisiklet ulaşım sitemini çalıştırdınız.")
+    
+    # şiimdilk iptal  def sistemi_durdur(self):
+        #print("Bisiklet ulaşım sistemini sonlandırdınız.")
+    
+    # şiimdilk iptal def km_basina_maaliyet(self):
+        #return 0.15
+    
+    def km_basina_maaliyet(self):
+
+        return 0.15 
+
+    def motoru_calistir(self):
+        if self.durum == "Arızalı":
+            print(f"❌ HATA: Bisiklet ({self.id}) sistem dışı! Kilit açılamaz.")
+            return       
+        print("✅ Bisiklet kilidi açıldı. Keyifli sürüşler!")
+
+    def motoru_kapat(self):
+
+        print(f"Bisiklet {self.id} kilitlendi.")    
+
+    def bilgi_ver(self):
+
+        super().bilgi_ver()
+        
+class Metro(TransportVehicle):
+    def __init__(self, id, kapasite, durum, mevcut_lokasyon="Ana Kampüs",hat_ismi="M1"):
+        super().__init__(id, kapasite, durum, mevcut_lokasyon)
+        self.hat_ismi = hat_ismi
+
+        self.duraklar = [
+            "Ana Kampüs"
+            "Yenikapı",
+            "Aksaray",
+            "Emniyet - Fatih",
+            "Topkapı - Ulubatlı",
+            "Bayrampaşa - Maltepe",
+            "Sağmalcılar",
+            "Kocatepe",
+            "Otogar",
+            "Terazidere",
+            "Kuzey Kampüs"
+            "Davutpaşa - YTÜ",
+            "Merter",
+            "Zeytinburnu",
+            "Kız Yurdu",
+            "Bakırköy - İncirli",
+            "Bahçelievler",
+            "Ataköy - Şirinevler",
+            "Yenibosna",
+            "Erkek Öğrenci Yurdu"
+            "DTM - İstanbul Fuar Merkezi",
+            "Atatürk Havalimanı"
+    ] #İstanbul M1 metro hattı duraklar ekstra olarak Ana Kampüs Kuzey Kampüs ve Yurtlar eklenmiştir
+    def motoru_calistir(self):
+        if self.durum == "Arızalı":
+            print(f"❌ KRİTİK HATA: {self.hat_ismi} hattında sinyalizasyon arızası! Metro hareket edemez.")
+            return
+        
+    def motoru_kapat(self):
+        return super().motoru_kapat()
+    
+    def km_basina_maaliyet(self):
+        return super().km_basina_maaliyet()
+    
+    def anons(self):
+        print(f"Şuan {self.mevcut_lokasyon} konumunda bulunmaktasınız.")
+        print(f"Sıradaki durak")
+
+class Havaray(TransportVehicle):
+    def __init__(self, id, kapasite, durum, mevcut_lokasyon="Kuzey Kampüs"):
+        super().__init__(id, kapasite, durum, mevcut_lokasyon)
+
+        self.duraklar = [
+            "Vadistanbul AVM",
+            "Seyrantepe Metro Aktarma",
+            "Kuzey Kampüs",
+            "Kuzey Yurtlar Bölgesi",
+            "Teknopark"
+        ]
+    
+    def motoru_calistir(self):
+        if self.durum == "Arızalı":
+            print(f"❌ TEHLİKE: Havaray ({self.id}) sensör hatası! Güvenlik nedeniyle hareket edemez.")
+            return
+    
+    def km_basina_maaliyet(self):
+        return 15.5 #Henüz fiyatlandırma hakkında karar vermedim deney örneği.
+    
+    def motoru_kapat(self):
+        return super().motoru_kapat()
+    
+class Tramvay(TransportVehicle):
+    def __init__(self, id, kapasite, durum, mevcut_lokasyon="Ana Kampüs"):
+        super().__init__(id, kapasite, durum, mevcut_lokasyon)
+        self.duraklar = [
+            "Ana Kampüs"
+            "Kabataş",
+            "Fındıklı",
+            "Tophane",
+            "Karaköy",
+            "Eminönü",
+            "Sirkeci",
+            "Gülhane",
+            "Sultanahmet",
+            "Çemberlitaş",
+            "Beyazıt - Kapalıçarşı",
+            "Laleli - İstanbul Üni.",
+            "Kuzey Kampüs"
+            "Aksaray",
+            "Yusufpaşa",
+            "Haseki",
+            "Fındıkzade",
+            "Çapa - Şehremini",
+            "Kız Yurdu"
+            "Pazartekki",
+            "Topkapı",
+            "Cevizlibağ",
+            "Zeytinburnu",
+            "Bağcılar"
+            "Erkek Yurdu"
+        ]
+    def motoru_calistir(self):
+        # 1. ARIZA KONTROLÜ
+        if self.durum == "Arızalı":
+            print(f"❌ ELEKTRİK HATASI: Tramvay ({self.id}) katener hattından enerji alamıyor! Pantograf inik.")
+            return
+    
+    def motoru_kapat(self):
+        return super().motoru_kapat()
+    
+    def km_basina_maaliyet(self):
+        return 9.35

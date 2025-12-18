@@ -1,20 +1,22 @@
-from base import Shuttle, Bus, Scooter, Bicyle, Metro, Tramvay, Havaray
+from implementations import Shuttle, Bus, Scooter, Bicyle, Metro, Tramvay, Havaray
 
 print("Main.py dosyasının testi") #Değişme ihtimali mevcut denemek için böyle yaptım.
 
 print("Shuttle")
-shuttle1 = Shuttle(15,20,"Müsaıt", 15) #id, kapasite, durum, batarya_yuzdesi
+shuttle1 = Shuttle(15,20,"Müsait", 15) #id, kapasite, durum, batarya_yuzdesi
 shuttle1.motoru_calistir()
 shuttle1.motoru_kapat()
 #print(f"{s1.km_basina_maaliyet}") #burda error verdi tanımlamayı unutmuşum şimdilik yorum satırına aldım
 
 print("Otobüs")
 otobus1 = Bus(16,"Durakta","Koruklu")
-otobus1.motoru_calistir()
-#otobus1.motoru_kapat() sıkıntı var
 #otobus1.mevcut_lokasyon() hata verdi
 print(f"Otobüs Tipi: {otobus1.otobus_tipi}")
 print(f"Kapasite: {otobus1.kapasite}") 
+otobus1.ariza_yap()
+otobus1.motoru_calistir()
+otobus1.tamir_et()
+otobus1.motoru_calistir()
 otobus1.motoru_kapat()
 otobus1.bilgi_ver
 
@@ -35,11 +37,21 @@ Scooter1.motoru_calistir()
 print(f"Scooter Maliyeti: {Scooter1.km_basina_maaliyet()} TL")
 Scooter1.motoru_kapat()
 
+
+print("Bicyle")
+Bicyle1 = Bicyle(99, "Çalışır", "Ana Kampüs")
 print("Genel Bilgiler Alanı")
+print("Otobüs")
 otobus1.bilgi_ver()
 print("-------------------------------------------------------------------")
+print("Havaray")
 havaray1.bilgi_ver()
 print("-------------------------------------------------------------------")
+print("Metro")
 metro1.bilgi_ver()
 print("-------------------------------------------------------------------")
+print("Shuttle")
 shuttle1.bilgi_ver()
+print("-------------------------------------------------------------------")
+print("Bicyle")
+Bicyle1.bilgi_ver()
