@@ -18,7 +18,7 @@ class PaymentService:
         self.transaction_repo = transaction_repo
 
         # Yemekhane menüsü (kategorilere ayrılmış)
-        self.menu = {
+        self.yemekhane_menu = {
             "corba": [
                 {"ad": "Mercimek Çorbası", "fiyat": 40},
                 {"ad": "Ezogelin Çorbası", "fiyat": 30},
@@ -85,19 +85,79 @@ class PaymentService:
             "icecek": ["Ayran"],
             "promosyon": ["Çeyrek ekmek", "500 ml su"]
         } 
-
+        
+        # Ayın her haftası için popüler olarak belirlenen yemekhane menülerini listelenmektedir.
         self.ayin_menusu = {
             "1.hafta": ["Mercimek Çorbası", "Tavuk Döner", "Ayran", "Triliçe"],
             "2.hafta": ["Şehriye Çorbası", "Kayseri Yağlaması", "Kola", "Sütlaç"],
             "3.hafta": ["Ezogelin Çorbası", "Et Döner", "Limonata", "Kazandibi" ],
             "4.hafta": ["Domates Çorbası", "İzmir Köfte", "Gazoz", "Baklava"]
         }
+        self.kafeterya_menu = {
+            "yiyecek": {
+                "Salamlı Tost": 45,
+                "Kaşarlı Tost": 40,
+                "Karışık Tost": 60,
+                "Hamburger" : 90,
+                "Sandviç": 50,
+                "Açma" : 30,
+                "Kete" : 30,
+                "Simit" : 25,
+                "Poğaça": 20,
+            },
+            "icecek": {
+                "Ayran": 10,
+                "Maden Suyu" : 30,
+                "Kola" : 60,
+            },
+            "atistirmalik": {
+                "Cips": 25,
+                "Çikolata": 40,
+                "Bisküvi": 45
+            }
+        }
+        self.kafe_menu = {
+            "sicak_icecek": {
+                "Türk Kahvesi": 60,
+                "Latte": 35,
+                "Americano": 45,
+                "Cappuccino": 55,
+                "Salep": 40
+            },
+            "soguk_icecek": {
+                "Cold Brew": 60,
+                "Frappe": 35,
+                "Iced Latte": 55,
+                "Iced Mocha": 45,
+                "Iced Americano": 50,
+                "Milkshake": 40
+            }
+
+        }
+
+        self.bardak_boyut = {
+            "tall": 0,
+            "grande": 20,
+            "venti": 35
+        }
+
+        self.ekstra_shot = 15
+
+        self.otomat = {
+           "1": {"ad": "Su", "fiyat": 20, "stok": 8},
+           "2": {"ad": "Bisküvi", "fiyat": 45, "stok": 8},
+           "3": {"ad": "Çikolata", "fiyat": 30, "stok": 8},
+           "4": {"ad": "Meyve Suyu", "fiyat": 20, "stok": 8},
+           "5": {"ad": "Sakız", "fiyat": 35, "stok": 8},
+           "6": {"ad": "Lolipop", "fiyat": 45, "stok": 8}
+        }
+       
     def gunun_menusunden_siparis(self):
         secilenler = []
 
         for kategori in self.gunun_menusu:
             for ad in self.gunun_menusu[kategori]:
-                for urun in self.menu[kategori]:
+                for urun in self.yemekhane_menu[kategori]:
                     if urun["ad"] == ad:
                         secilenler.append(urun)
         return secilenler
@@ -105,12 +165,59 @@ class PaymentService:
     
     def ayin_menusunu_getir(self):
         return self.ayin_menusu
+    
+    def kafeterya_siparis(self, kategori, urun_adi):
+      if kategori not in self.kafeterya_menu:
+        raise Exception("Geçersiz kategori")
 
+      if urun_adi not in self.kafeterya_menu[kategori]:
+        raise Exception("Ürün bulunamadı")
+
+      return {
+        "ad": urun_adi,
+        "fiyat": self.kafeterya_menu[kategori][urun_adi]
+    }
+   
+    def kafe_siparis(self, kategori, kahve_adi, boyut, shot=0):
+      if kategori not in self.kafe_menu:
+        raise Exception("Geçersiz içecek kategorisi")
+
+      if kahve_adi not in self.kafe_menu[kategori]:
+        raise Exception("Kahve bulunamadı")
+      fiyat = self.kafe_menu[kategori][kahve_adi]
+      fiyat += self.bardak_boyut[boyut]
+      fiyat += shot * self.ekstra_shot
+      return fiyat
+    
+    def otomat_siparis(self, kod):
+      if kod not in self.otomat:
+        raise Exception("Geçersiz ürün kodu")
+
+      urun = self.otomat[kod]
+
+      if urun["stok"] <= 0:
+        raise Exception("Otomatta ürün kalmadı")
+
+      urun["stok"] -= 1
+
+      return {
+        "ad": urun["ad"],
+        "fiyat": urun["fiyat"]
+    } 
 
     # Menüdeki tüm kategorileri ve ürünleri döndürmeyi sağlar.
-    def menu_listele(self):
-        return self.menu
-
+    def yemekhane_menu_listele(self):
+        return self.yemekhane_menu
+    
+    def kafeterya_menu_listele(self):
+        return self.kafeterya_menu
+    
+    def kafe_menu_listele(self):
+        return self.kafe_menu
+    
+    def otomat_menu_listele(self):
+        return self.otomat
+    
     # Kullanıcının seçtiği ürünlere göre sipariş oluşturur.
     def siparis_olustur(self, secilen_urunler):
         siparis = []
@@ -138,15 +245,15 @@ class PaymentService:
 
     #Ödeme gerçekleştirme
     def odeme_yap(self, owner, payment_method, siparis):
-        if payment_method is None:
-            raise AuthorizationError("Uygun ödeme yöntemi bulunamadı")
-        toplam_tutar = self.toplam_tutar_hesapla(siparis)
-        if not payment_method.kontrol(toplam_tutar):
-           raise AuthorizationError("Yetkilendirme başarısız: Yetersiz bakiye/limit")
-        if payment_method.odeme(toplam_tutar):
-            self.transaction_repo.islem_ekle(Transaction(owner, toplam_tutar, type(payment_method).__name__))
-            return True
-        return False
+      if payment_method is None:
+        raise AuthorizationError("Uygun ödeme yöntemi bulunamadı")
+      toplam_tutar = self.toplam_tutar_hesapla(siparis)
+      if not payment_method.kontrol(toplam_tutar):
+        raise AuthorizationError("Yetkilendirme başarısız: Yetersiz bakiye/limit")
+      if payment_method.odeme(toplam_tutar):
+        self.transaction_repo.islem_ekle(Transaction(owner, toplam_tutar, type(payment_method).__name__))
+        return True
+      return False
 
     #İşlem geçmişini listeleme
     def islem_gecmisi(self, owner=None):
