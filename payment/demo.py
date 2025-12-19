@@ -116,13 +116,51 @@ cuzdan = OnlineWalletPayment(ogrenci, cuzdan_bakiye, "TRY")
 payment_repo.ekle(kart)
 payment_repo.ekle(cuzdan)
 
-print("\n--- Sipariş Oluşturma ---")
-adet = int(input("Kaç ürün aldınız?: "))
+print("""
+1 - Yemekhane
+2 - Kafeterya
+3 - Kafe
+4 - Otomat """)
 
+secim = input("Seçim: ")
 siparis = []
-for i in range(adet):
-    fiyat = int(input(f"{i+1}. ürün fiyatı (TL): "))
-    siparis.append(fiyat)
+
+if secim == "1":
+    print("\n--- GÜNÜN MENÜSÜ ---")
+    urunler = service.gunun_menusunden_siparis()
+
+    for u in urunler:
+        print(f"{u['ad']} - {u['fiyat']} TL")
+
+    siparis.extend(urunler)
+
+if secim == "2":
+    menu = service.kafeterya_menu_listele()
+    print(menu)
+
+    kategori = input("Kategori: ")
+    urun = input("Ürün adı: ")
+
+    siparis.append(service.kafeterya_siparis(kategori, urun))
+
+if secim == "3":
+    menu = service.kafe_menu_listele()
+    print(menu)
+
+    kategori = input("Kategori: ")
+    kahve = input("İçecek: ")
+    boyut = input("Boyut (tall/grande/venti): ")
+    shot = int(input("Ekstra shot: "))
+
+    fiyat = service.kafe_siparis(kategori, kahve, boyut, shot)
+    siparis.append({"ad": kahve, "fiyat": fiyat})
+
+if secim == "4":
+    menu = service.otomat_menu_listele()
+    print(menu)
+
+    kod = input("Ürün kodu: ")
+    siparis.append(service.otomat_siparis(kod))
 
 print("\nToplam Tutar:", sum(siparis), "TL")
 
