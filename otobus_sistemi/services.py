@@ -1,5 +1,15 @@
 from repository import TransportRepository
 
+class Bilet:
+    def __init__(self, yolcu_adi, binis, inis, tutar):
+        self.yolcu_adi = yolcu_adi
+        self.binis = binis
+        self.inis = inis
+        self.tutar = tutar
+
+    def bilet_ozeti(self):
+        return f"🎫 {self.yolcu_adi}: {self.nereden} -> {self.inis} ({self.tutar} TL)"
+
 class TransportService:
     def __init__(self):
         self.repo = TransportRepository()
@@ -45,3 +55,26 @@ class TransportService:
         for arac in liste:
             arac.bilgi_ver()
             print("-----------------------")
+    
+    def aktif_seferleri_listele(self):
+        print("--- Seferde Bulunan Araçlar ---")
+        tum_araclar = self.repo.araclari_listele()
+        bulundu = False
+        for arac in tum_araclar:
+            if arac.seferde_mi:
+                print(f"Araç ID: {arac.id} - Konum: {arac.mevcut_lokasyon}")
+                bulundu = True
+        
+        if not bulundu:
+            print("Şu an seferde olan araç yok.")
+
+    def uygun_arac_bul(self, gerekli_koltuk_sayisi):
+        print(f"--- {gerekli_koltuk_sayisi} kişilik bilet için uygun sefer aranıyor.")
+        uygunlar = self.repo.bos_koltuga_gore_filtrele(gerekli_koltuk_sayisi)
+        
+        if uygunlar:
+            for arac in uygunlar:
+                bos = arac.kapasite - arac.dolu_koltuk
+                print(f"Bulundu -> Araç ID: {arac.id} (Boş Yer: {bos})")
+        else:
+            print("Maalesef uygun kapasiteli araç bulunamadı.")

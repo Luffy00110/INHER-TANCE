@@ -6,6 +6,7 @@ from Metro import Metro
 from Bicycle import Bicycle    
 from Havaray import Havaray
 from Scooter import Scooter
+from services import servis
 
 print("Shuttle")
 shuttle1 = Shuttle(15, 20, "Müsait", 15) #id, kapasite, durum, batarya
@@ -64,3 +65,7 @@ shuttle1.bilgi_ver()
 print("-------------------------------------------------------------------")
 print("Bicycle")
 Bicycle1.bilgi_ver()
+print("Filtreleme Testi")
+servis.aktif_seferleri_listele() 
+servis.uygun_arac_bul(50) 
+print("Test Sonlandı")

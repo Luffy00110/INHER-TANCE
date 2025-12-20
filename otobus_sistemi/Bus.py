@@ -27,3 +27,8 @@ class Bus(TransportVehicle):
     
     def km_basina_maaliyet(self):
         return self.yakit_tuketimi_degeri
+    
+    def ucret_hesapla(self, binilen_durak, inilen_durak):
+        print(f"Bilgi: Otobüs hatlarında sabit tarife geçerlidir.")
+        print(f": Otobüs rotası : {binilen_durak} ---> {inilen_durak}")
+        return self.bilet_ucreti, 1

@@ -30,8 +30,10 @@ class Tramvay(TransportVehicle):
             "Bağcılar"
             "Erkek Yurdu"
         ]
+        self.durak_arasi_km = 1  
+        self.km_ucreti = 2.0
     def motoru_calistir(self):
-        # 1. ARIZA KONTROLÜ
+        # Arıza Kontrol
         if self.durum == "Arızalı":
             print(f"❌ ELEKTRİK HATASI: Tramvay ({self.id}) katener hattından enerji alamıyor! Pantograf inik.")
             return
@@ -41,3 +43,37 @@ class Tramvay(TransportVehicle):
     
     def km_basina_maaliyet(self):
         return 9.35
+    
+    def ucret_hesapla(self, binilen_durak,inilen_durak):
+        giris_sirasi = -1
+        durak_no = 0
+
+        for durak in self.duraklar:
+            if durak == binilen_durak:
+                giris_sirasi = durak_no
+                break
+            durak_no = durak_no + 1
+        
+        cikis_sirasi = durak_no
+        durak_no = 0
+
+        for durak in self.duraklar:
+            if durak == inilen_durak:
+                cikis_sirasi = durak_no
+                break
+            durak_no = durak_no + 1
+        
+        if giris_sirasi == -1 or cikis_sirasi == -1:
+            print("Hata: Böyle bir durak ismi listede yok.")
+            return 0, 0
+        
+        fark = 0
+        if cikis_sirasi > giris_sirasi:
+            fark = cikis_sirasi - giris_sirasi
+        else:
+            fark = giris_sirasi - cikis_sirasi
+
+        toplam_km = fark * self.durak_arasi_km
+        toplam_ucret = toplam_km * self.km_ucreti
+        
+        return toplam_ucret, fark

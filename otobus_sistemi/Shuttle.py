@@ -5,6 +5,8 @@ class Shuttle(TransportVehicle):
     def __init__(self, id, kapasite, durum, batarya_yuzdesi):
         super().__init__(id, kapasite, durum)
         self.batarya_yuzdesi = batarya_yuzdesi  # Shuttle'a özel özellik
+        self.duraklar = ["Ana Kampüs", "Kuzey Kampüs"]
+        self.km_ucreti = 0
 
     def motoru_calistir(self):
         if self.batarya_yuzdesi > 10:
@@ -22,145 +24,17 @@ class Shuttle(TransportVehicle):
         self.batarya_yuzdesi = 100
         print(f"Shuttle {self.id} şarj edildi. Batarya ful!")
 
-#Belediye otobüsü
-
-
-class Bicyle(TransportVehicle): #Bisiklet ksımı şimdilik sadece ücret eklenmiştir bunun dışında kart ödeme kısmı vs de eklenecektir.
-    def __init__(self, id,durum, mevcut_lokasyon="Ana Kampüs"):
-        super().__init__(id, 1, durum, mevcut_lokasyon)
-
-    # şiimdilk iptal def sistemi_calistir(self):
-        #print("Bisiklet ulaşım sitemini çalıştırdınız.")
-    
-    # şiimdilk iptal  def sistemi_durdur(self):
-        #print("Bisiklet ulaşım sistemini sonlandırdınız.")
-    
-    # şiimdilk iptal def km_basina_maaliyet(self):
-        #return 0.15
-    
-    def km_basina_maaliyet(self):
-
-        return 0.15 
-
-    def motoru_calistir(self):
-        if self.durum == "Arızalı":
-            print(f"❌ HATA: Bisiklet ({self.id}) sistem dışı! Kilit açılamaz.")
-            return       
-        print("✅ Bisiklet kilidi açıldı. Keyifli sürüşler!")
-
-    def motoru_kapat(self):
-
-        print(f"Bisiklet {self.id} kilitlendi.")    
-
-    def bilgi_ver(self):
-
-        super().bilgi_ver()
+    def ucret_hesapla(self, binilen_durak, inilen_durak):
+        durak_var_mi = False
+        if binilen_durak in self.duraklar and inilen_durak in self.duraklar:
+            durak_var_mi = True
+            
+        if durak_var_mi == False:
+            print("Hata: Shuttle sadece Ana ve Kuzey Kampüs arası gider.")
+            return 0, 0
+        if binilen_durak == inilen_durak:
+            print("Zaten aynı kampüstesiniz.")
+            return 0, 0
         
-class Metro(TransportVehicle):
-    def __init__(self, id, kapasite, durum, mevcut_lokasyon="Ana Kampüs",hat_ismi="M1"):
-        super().__init__(id, kapasite, durum, mevcut_lokasyon)
-        self.hat_ismi = hat_ismi
-
-        self.duraklar = [
-            "Ana Kampüs"
-            "Yenikapı",
-            "Aksaray",
-            "Emniyet - Fatih",
-            "Topkapı - Ulubatlı",
-            "Bayrampaşa - Maltepe",
-            "Sağmalcılar",
-            "Kocatepe",
-            "Otogar",
-            "Terazidere",
-            "Kuzey Kampüs"
-            "Davutpaşa - YTÜ",
-            "Merter",
-            "Zeytinburnu",
-            "Kız Yurdu",
-            "Bakırköy - İncirli",
-            "Bahçelievler",
-            "Ataköy - Şirinevler",
-            "Yenibosna",
-            "Erkek Öğrenci Yurdu"
-            "DTM - İstanbul Fuar Merkezi",
-            "Atatürk Havalimanı"
-    ] #İstanbul M1 metro hattı duraklar ekstra olarak Ana Kampüs Kuzey Kampüs ve Yurtlar eklenmiştir
-    def motoru_calistir(self):
-        if self.durum == "Arızalı":
-            print(f"❌ KRİTİK HATA: {self.hat_ismi} hattında sinyalizasyon arızası! Metro hareket edemez.")
-            return
-        
-    def motoru_kapat(self):
-        return super().motoru_kapat()
-    
-    def km_basina_maaliyet(self):
-        return super().km_basina_maaliyet()
-    
-    def anons(self):
-        print(f"Şuan {self.mevcut_lokasyon} konumunda bulunmaktasınız.")
-        print(f"Sıradaki durak")
-
-class Havaray(TransportVehicle):
-    def __init__(self, id, kapasite, durum, mevcut_lokasyon="Kuzey Kampüs"):
-        super().__init__(id, kapasite, durum, mevcut_lokasyon)
-
-        self.duraklar = [
-            "Vadistanbul AVM",
-            "Seyrantepe Metro Aktarma",
-            "Kuzey Kampüs",
-            "Kuzey Yurtlar Bölgesi",
-            "Teknopark"
-        ]
-    
-    def motoru_calistir(self):
-        if self.durum == "Arızalı":
-            print(f"❌ TEHLİKE: Havaray ({self.id}) sensör hatası! Güvenlik nedeniyle hareket edemez.")
-            return
-    
-    def km_basina_maaliyet(self):
-        return 15.5 #Henüz fiyatlandırma hakkında karar vermedim deney örneği.
-    
-    def motoru_kapat(self):
-        return super().motoru_kapat()
-    
-class Tramvay(TransportVehicle):
-    def __init__(self, id, kapasite, durum, mevcut_lokasyon="Ana Kampüs"):
-        super().__init__(id, kapasite, durum, mevcut_lokasyon)
-        self.duraklar = [
-            "Ana Kampüs"
-            "Kabataş",
-            "Fındıklı",
-            "Tophane",
-            "Karaköy",
-            "Eminönü",
-            "Sirkeci",
-            "Gülhane",
-            "Sultanahmet",
-            "Çemberlitaş",
-            "Beyazıt - Kapalıçarşı",
-            "Laleli - İstanbul Üni.",
-            "Kuzey Kampüs"
-            "Aksaray",
-            "Yusufpaşa",
-            "Haseki",
-            "Fındıkzade",
-            "Çapa - Şehremini",
-            "Kız Yurdu"
-            "Pazartekki",
-            "Topkapı",
-            "Cevizlibağ",
-            "Zeytinburnu",
-            "Bağcılar"
-            "Erkek Yurdu"
-        ]
-    def motoru_calistir(self):
-        # 1. ARIZA KONTROLÜ
-        if self.durum == "Arızalı":
-            print(f"❌ ELEKTRİK HATASI: Tramvay ({self.id}) katener hattından enerji alamıyor! Pantograf inik.")
-            return
-    
-    def motoru_kapat(self):
-        return super().motoru_kapat()
-    
-    def km_basina_maaliyet(self):
-        return 9.35
+        print("Bilgi: Öğrenci shuttle servisi ücretsizdir.")
+        return 0, 1
