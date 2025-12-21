@@ -15,6 +15,27 @@ class TransportVehicle(ABC):
     @abstractmethod
     def motoru_kapat(self):
         pass
+    @abstractmethod
+    def ucret_hesapla(self, giris, cikis):
+        pass
+
+    @staticmethod #ID kontrolu yapma 
+    def id_kontrol(arac_id):
+        if isinstance(arac_id, int) and arac_id > 0:
+            return True
+        return False
+    
+    @classmethod
+    def toplam_filo_sayisi(sinif):
+        print(f"Sistemdeki Toplam Araç: {sinif.toplam_arac_sayisi}")
+    @classmethod
+    def filo_durum_kontrolu(sinif):
+        # Örnek bir limit koyalım, mesela 5 araçtan fazlaysa uyarı versin
+        limit = 5 
+        if sinif.toplam_arac_sayisi >= limit:
+            print(f"UYARI: Filo çok kalabalık! ({sinif.toplam_arac_sayisi} araç var.)")
+        else:
+            print(f"Sistem rahat, yeni araç eklenebilir. ({sinif.toplam_arac_sayisi} araç var.)")
 
     @abstractmethod
     def km_basina_maaliyet(self):
@@ -27,14 +48,14 @@ class TransportVehicle(ABC):
         
     def ariza_yap(self):
         self.durum = "Arızalı"
-        print(f"⚠️  ALARM: {self.id} numaralı araç ARIZA YAPTI! Sistem dışı.")
+        print(f"ALARM: {self.id} numaralı araç ARIZA YAPTI! Sistem dışı.")
 
     def tamir_et(self):
         if self.durum == "Arızalı":
-            print("🛠️  Araç servise alındı, tamir ediliyor...")
+            print("Araç servise alındı, tamir ediliyor...")
             self.durum = "Müsait" 
-            print(f"✅ {self.id} numaralı araç tamir edildi. Tekrar göreve hazır.")
+            print(f"{self.id} numaralı araç tamir edildi. Tekrar göreve hazır.")
         else:
-            print(f"ℹ️  {self.id} numaralı araç zaten sağlam, tamire gerek yok!.")
+            print(f"ℹ{self.id} numaralı araç zaten sağlam, tamire gerek yok!.")
 
 
