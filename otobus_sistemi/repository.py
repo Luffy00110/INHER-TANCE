@@ -1,32 +1,34 @@
 class TransportRepository:
     def __init__(self):
-        self.arac_listesi = []
+        self.__database = []
 
-    def arac_ekle(self, arac):
-        self.arac_listesi.append(arac)
-        print(f"Repository: {arac.id} sisteme kaydedildi.")
+    def add(self, arac):
+        self.__database.append(arac)
 
-    def arac_sil(self, arac_id):
-        for arac in self.arac_listesi:
-            if arac.id == arac_id:
-                self.arac_listesi.remove(arac)
-                print(f"Repository: {arac_id} silindi.")
-                return True
+    def remove(self, arac_id):
+        arac = self.find_by_id(arac_id)
+        if arac:
+            self.__database.remove(arac)
+            return True
         return False
 
-    def id_ile_bul(self, arac_id):
-        for arac in self.arac_listesi:
-            if arac.id == arac_id:
+    def get_all(self):
+        return self.__database
+
+    def find_by_id(self, arac_id):
+        for arac in self.__database:
+            if arac.get_id() == arac_id:
                 return arac
         return None
 
-    def araclari_listele(self):
-        return self.arac_listesi
-
-    def bos_koltuga_gore_filtrele(self, min_bos_koltuk):
+    def filter_by_capacity(self, min_kapasite):
         uygun_araclar = []
-        for arac in self.arac_listesi:
-            bos_yer = arac.kapasite - arac.dolu_koltuk
-            if bos_yer >= min_bos_koltuk:
-                uygun_araclar.append(arac)
+        for arac in self.__database:
+            # Kapasite kontrolu
+            try:
+                kap = arac.get_kapasite()
+                if kap >= min_kapasite:
+                    uygun_araclar.append(arac)
+            except:
+                continue
         return uygun_araclar

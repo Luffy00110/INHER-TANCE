@@ -1,0 +1,73 @@
+{
+  "filo": [
+    {
+      "arac": "Bus",
+      "id": 101,
+      "durum": "Garajda",
+      "otobus_tipi": "Koruklu",
+      "mevcut_lokasyon": "Ana Kampüs",
+      "plaka": "34 IST 001"
+    },
+    {
+      "arac": "Bus",
+      "id": 102,
+      "durum": "Seferde",
+      "otobus_tipi": "Standart",
+      "mevcut_lokasyon": "Kadıköy",
+      "plaka": "34 IST 002"
+    },
+    {
+      "arac": "Shuttle",
+      "id": 201,
+      "kapasite": 15,
+      "durum": "Müsait",
+      "batarya_yuzdesi": 85,
+      "mevcut_lokasyon": "Ana Kampüs",
+      "plaka": "34 IST 003"
+    },
+    {
+      "arac": "Shuttle",
+      "id": 202,
+      "kapasite": 15,
+      "durum": "Şarjda",
+      "batarya_yuzdesi": 10,
+      "mevcut_lokasyon": "Kuzey Kampüs",
+      "plaka": "34 IST 004"
+    },
+    {
+      "arac": "Metro",
+      "id": 301,
+      "kapasite": 1200,
+      "durum": "Seferde",
+      "mevcut_lokasyon": "Kuzey Kampüs",
+      "hat_ismi": "M1"
+    },
+    {
+      "arac": "Havaray",
+      "id": 401,
+      "kapasite": 60,
+      "durum": "Seferde",
+      "mevcut_lokasyon": "Vadistanbul AVM"
+    },
+    {
+      "arac": "Scooter",
+      "id": 501,
+      "durum": "Müsait",
+      "batarya_yuzdesi": 78,
+      "mevcut_lokasyon": "Kütüphane"
+    },
+    {
+      "arac": "Bicycle",
+      "id": 601,
+      "durum": "Müsait",
+      "mevcut_lokasyon": "Erkek Yurdu"
+    },
+    {
+      "arac": "Tramvay",
+      "id": 701,
+      "kapasite": 300,
+      "durum": "Arızalı",
+      "mevcut_lokasyon": "Kuzey Kampüs"
+    }
+  ]
+}
