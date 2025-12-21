@@ -1,10 +1,10 @@
 from base import TransportVehicle
 
 class Tramvay(TransportVehicle):
-    def __init__(self, id, kapasite, durum, mevcut_lokasyon="Ana Kampüs"):
-        super().__init__(id, kapasite, durum, mevcut_lokasyon)
-        self.duraklar = [
-            "Ana Kampüs"
+    def __init__(self, id, durum, mevcut_yakit, depo_limit, kapasite, mevcut_lokasyon="Ana Kampüs"):
+        super().__init__(id, kapasite, durum, depo_limit, mevcut_yakit, mevcut_lokasyon)
+        self.__duraklar = [
+            "Ana Kampüs",
             "Kabataş",
             "Fındıklı",
             "Tophane",
@@ -16,55 +16,58 @@ class Tramvay(TransportVehicle):
             "Çemberlitaş",
             "Beyazıt - Kapalıçarşı",
             "Laleli - İstanbul Üni.",
-            "Kuzey Kampüs"
+            "Kuzey Kampüs",
             "Aksaray",
             "Yusufpaşa",
             "Haseki",
             "Fındıkzade",
             "Çapa - Şehremini",
-            "Kız Yurdu"
+            "Kız Yurdu",
             "Pazartekki",
             "Topkapı",
             "Cevizlibağ",
             "Zeytinburnu",
-            "Bağcılar"
-            "Erkek Yurdu"
+            "Bağcılar",
+            "Erkek Yurdu",
         ]
-        self.durak_arasi_km = 1  
-        self.km_ucreti = 2.0
+        self.__durak_arasi_km = 1  
+        self.__km_ucreti = 2.0
     def motoru_calistir(self):
         # Arıza Kontrol
-        if self.durum == "Arızalı":
-            print(f"❌ ELEKTRİK HATASI: Tramvay ({self.id}) katener hattından enerji alamıyor! Pantograf inik.")
+        if self.get_durum() == "Arızalı":
+            print(f" ELEKTRİK HATASI: Tramvay ({self.get_id()}) katener hattından enerji alamıyor! Pantograf inik.")
             return
+        super().motoru_calistir()
+        print(f"Tramvay ({self.get_id()}) pantografı kaldırıldı. Motor hazır.")
     
     def motoru_kapat(self):
-        return super().motoru_kapat()
-    
+        super().motoru_kapat()
+        print(f"Tramvay ({self.get_id()}) pantografı indirildi. Motor kapatıldı.")
+        
     def km_basina_maaliyet(self):
         return 9.35
     
-    def ucret_hesapla(self, binilen_durak,inilen_durak):
+    def ucret_hesapla(self, binilen_durak, inilen_durak):
         giris_sirasi = -1
         durak_no = 0
 
-        for durak in self.duraklar:
+        for durak in self.__duraklar:
             if durak == binilen_durak:
                 giris_sirasi = durak_no
                 break
             durak_no = durak_no + 1
-        
-        cikis_sirasi = durak_no
-        durak_no = 0
 
-        for durak in self.duraklar:
+        cikis_sirasi = -1  
+        durak_no = 0       
+
+        for durak in self.__duraklar:
             if durak == inilen_durak:
                 cikis_sirasi = durak_no
                 break
             durak_no = durak_no + 1
         
         if giris_sirasi == -1 or cikis_sirasi == -1:
-            print("Hata: Böyle bir durak ismi listede yok.")
+            print("Girdiğiniz durak tramvay hattında bulunmuyor.")
             return 0, 0
         
         fark = 0
@@ -73,7 +76,9 @@ class Tramvay(TransportVehicle):
         else:
             fark = giris_sirasi - cikis_sirasi
 
-        toplam_km = fark * self.durak_arasi_km
-        toplam_ucret = toplam_km * self.km_ucreti
+        toplam_km = fark * self.__durak_arasi_km
+        toplam_ucret = toplam_km * self.__km_ucreti
+        
+        print(f"Tramvay Rota: {binilen_durak} -> {inilen_durak} ({fark} durak)")
         
         return toplam_ucret, fark

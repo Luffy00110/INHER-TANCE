@@ -1,0 +1,37 @@
+GUN SONU FILO RAPORU
+==============================
+Rapor Tarihi: 2025-12-21 23:44:10.679427
+
+ID: 101 | Tip: Bus | Durum: Müsait
+ID: 102 | Tip: Bus | Durum: Seferde
+ID: 103 | Tip: Bus | Durum: Müsait
+ID: 201 | Tip: Shuttle | Durum: Müsait
+ID: 202 | Tip: Shuttle | Durum: Müsait
+ID: 203 | Tip: Shuttle | Durum: Şarjda
+ID: 301 | Tip: Metro | Durum: Aktif
+ID: 302 | Tip: Metro | Durum: Seferde
+ID: 303 | Tip: Metro | Durum: Bakımda
+ID: 401 | Tip: Havaray | Durum: Müsait
+ID: 402 | Tip: Havaray | Durum: Müsait
+ID: 403 | Tip: Havaray | Durum: Arızalı
+ID: 501 | Tip: Scooter | Durum: Müsait
+ID: 502 | Tip: Scooter | Durum: Müsait
+ID: 503 | Tip: Scooter | Durum: Müsait
+ID: 601 | Tip: Bicycle | Durum: Müsait
+ID: 602 | Tip: Bicycle | Durum: Müsait
+ID: 603 | Tip: Bicycle | Durum: Arızalı
+ID: 701 | Tip: Tramvay | Durum: Müsait
+ID: 702 | Tip: Tramvay | Durum: Müsait
+ID: 703 | Tip: Tramvay | Durum: Arızalı
+ID: 801 | Tip: Metrobus | Durum: Müsait
+ID: 802 | Tip: Metrobus | Durum: Seferde
+ID: 803 | Tip: Metrobus | Durum: Müsait
+ID: 901 | Tip: Vapur | Durum: Müsait
+ID: 902 | Tip: Vapur | Durum: Seferde
+ID: 903 | Tip: Vapur | Durum: Müsait
+ID: 1001 | Tip: Teleferik | Durum: Müsait
+ID: 1002 | Tip: Teleferik | Durum: Müsait
+ID: 1003 | Tip: Teleferik | Durum: Arızalı
+ID: 1101 | Tip: DenizTaksi | Durum: Müsait
+ID: 1102 | Tip: DenizTaksi | Durum: Müsait
+ID: 1103 | Tip: DenizTaksi | Durum: Müsait

@@ -1,14 +1,14 @@
 from base import TransportVehicle
 
 class Metro(TransportVehicle):
-    def __init__(self, id, kapasite, durum,binilen_durak,inilen_durak, mevcut_lokasyon="Ana Kampüs",hat_ismi="M1"):
-        super().__init__(id, kapasite, durum, mevcut_lokasyon)
-        self.hat_ismi = hat_ismi
-        self.binilen_durak = binilen_durak
-        self.inilen_durak = inilen_durak
+    def __init__(self, id, durum, mevcut_yakit, depo_limit, kapasite, durak_arasi_km, km_ucreti, hat_ismi, mevcut_lokasyon="Ana Kampüs"):
+        super().__init__(id, kapasite, durum, depo_limit, mevcut_yakit, mevcut_lokasyon)
+        self.__hat_ismi = hat_ismi
+        self.__durak_arasi_km = durak_arasi_km
+        self.__km_ucreti = km_ucreti
 
         self.duraklar = [
-            "Ana Kampüs"
+            "Ana Kampüs",
             "Yenikapı",
             "Aksaray",
             "Emniyet - Fatih",
@@ -18,7 +18,7 @@ class Metro(TransportVehicle):
             "Kocatepe",
             "Otogar",
             "Terazidere",
-            "Kuzey Kampüs"
+            "Kuzey Kampüs",
             "Davutpaşa - YTÜ",
             "Merter",
             "Zeytinburnu",
@@ -27,55 +27,54 @@ class Metro(TransportVehicle):
             "Bahçelievler",
             "Ataköy - Şirinevler",
             "Yenibosna",
-            "Erkek Öğrenci Yurdu"
+            "Erkek Öğrenci Yurdu",
             "DTM - İstanbul Fuar Merkezi",
             "Atatürk Havalimanı"
     ] #İstanbul M1 metro hattı duraklar ekstra olarak Ana Kampüs Kuzey Kampüs ve Yurtlar eklenmiştir
+    @classmethod
+    def calisma_saatleri_goster(cls):
+       
+        return "Metro Çalışma Saatleri: 06:00 - 00:00 (Hafta sonu 24 saat)"
+    staticmethod
+    def tahmini_sure_hesapla(durak_sayisi):
+        sure = durak_sayisi * 2.5
+        return f"{durak_sayisi} durak için tahmini varış süresi: {sure} dakika."
+    
     def motoru_calistir(self):
-        if self.durum == "Arızalı":
-            print(f"❌ KRİTİK HATA: {self.hat_ismi} hattında sinyalizasyon arızası! Metro hareket edemez.")
+        if self.get_durum() == "Arızalı":
+            print(f"{self.__hat_ismi} hattında sinyalizasyon arızası! Metro hareket edemez.")
             return
+        super().motoru_calistir()
+        print(f"Metro ({self.get_id()}) sefere başladı.")
         
     def motoru_kapat(self):
-        return super().motoru_kapat()
+        super().motoru_kapat()
+        print(f"Metro ({self.get_id()}) motor kapattı.")
     
     def km_basina_maaliyet(self):
-        return super().km_basina_maaliyet()
+        return  25.75
     
     def anons(self):
-        print(f"Şuan {self.mevcut_lokasyon} konumunda bulunmaktasınız.")
-        print(f"Sıradaki durak")
+        print(f"Sayın yolcularımız lütfen araçtan ayrılırken değerli eşyalarınızı yanınıza almayı unutmayınız. İyi yolculuklar dileriz!")
     
-    def ucret_hesapla(self, binilen_durak,inilen_durak):
+    def ucret_hesapla(self, binilen_durak, inilen_durak):
         giris_sirasi = -1
-        durak_no = 0
+        cikis_sirasi = -1
 
+        durak_no = 0
         for durak in self.duraklar:
             if durak == binilen_durak:
                 giris_sirasi = durak_no
-                break
-            durak_no = durak_no + 1
-        
-        cikis_sirasi = durak_no
-        durak_no = 0
-
-        for durak in self.duraklar:
             if durak == inilen_durak:
                 cikis_sirasi = durak_no
-                break
-            durak_no = durak_no + 1
-        
-        if giris_sirasi == -1 or cikis_sirasi == -1:
-            print("Hata: Böyle bir durak ismi listede yok.")
-            return 0, 0
-        
-        fark = 0
-        if cikis_sirasi > giris_sirasi:
-            fark = cikis_sirasi - giris_sirasi
-        else:
-            fark = giris_sirasi - cikis_sirasi
+            durak_no += 1
 
-        toplam_km = fark * self.durak_arasi_km
-        toplam_ucret = toplam_km * self.km_ucreti
-        
+        if giris_sirasi == -1 or cikis_sirasi == -1:
+            print("Böyle bir durak ismi listede yok.")
+            return 0, 0
+
+        fark = abs(cikis_sirasi - giris_sirasi)
+        toplam_km = fark * self.__durak_arasi_km
+        toplam_ucret = toplam_km * self.__km_ucreti
+
         return toplam_ucret, fark
