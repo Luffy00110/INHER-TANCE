@@ -1,6 +1,6 @@
 GUN SONU FILO RAPORU
 ==============================
-Rapor Tarihi: 2025-12-21 23:31:49.617048
+Rapor Tarihi: 2025-12-21 23:44:10.679427
 
 ID: 101 | Tip: Bus | Durum: Müsait
 ID: 102 | Tip: Bus | Durum: Seferde
