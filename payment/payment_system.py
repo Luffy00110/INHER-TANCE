@@ -1,6 +1,6 @@
 import random
 from datetime import datetime
-from payment_system import CreditCardPayment
+from payment.CreditCardPayment import CreditCardPayment
 from repository import PaymentMethodRepository, TransactionRepository
 
 # Ödeme sistemi hatalarını yönetmek için özel hata sınıfı.
